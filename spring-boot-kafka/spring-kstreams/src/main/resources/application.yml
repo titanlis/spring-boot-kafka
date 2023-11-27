@@ -1,0 +1,49 @@
+server:
+  port: ${SERVER_PORT:8094}
+
+# Application settings
+app:
+  kafka:
+    store:
+      bufferName: ${BUFFER_STORE_NAME:buffer-store} # Наименование хранилища данных
+    topic:
+      input: ${INPUT_TOPIC:order-output} # Топик для входящих запросов
+      dead: ${DEAD_TOPIC:order} # Топик для синтаксических ошибок
+
+spring:
+  application:
+    name: ${APPLICATION_NAME:spring-kstreams}
+  main:
+    allow-circular-references: true
+
+  # Kafka settings
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:29092}
+
+  # Messaging settings
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: ${spring.kafka.bootstrap-servers}
+          producer-properties:
+            max.request.size: ${KAFKA_PRODUCER_MAX_REQUEST_SIZE:10485760}
+            buffer.memory: ${KAFKA_PRODUCER_BUFFER_MEMORY:33554432}
+        streams:
+          binder:
+            application-id: ${KAFKA_APPLICATION_ID:${spring.application.name}}
+            configuration:
+              state:
+                dir: ${KAFKA_STATE_STORE_DIR:${java.io.tmpdir:/tmp}/kafka-streams}
+              topic.max.message.bytes: ${KAFKA_INTERNAL_TOPIC_MAX_MESSAGE_BYTES:1048576}
+            consumer-properties:
+              max.poll.interval.ms: ${KAFKA_MAX_POLL_INTERVAL:300000}
+            producer-properties:
+              max.request.size: ${KAFKA_MAX_REQUEST_SIZE:1048576}
+            auto-create-topics: ${KAFKA_AUTO_CREATE_TOPICS:true}
+            replication-factor: ${KAFKA_STREAMS_REPLICATION_FACTOR:-1}
+      bindings:
+        inputTopic-in-0:
+          destination: ${app.kafka.topic.input}
+    function:
+      definition: inputTopic

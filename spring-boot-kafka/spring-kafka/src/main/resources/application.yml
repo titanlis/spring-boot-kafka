@@ -1,0 +1,9 @@
+# Server settings
+server:
+  port: ${SERVER_PORT:8089}
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:29092}
+  cloud:
+    stream:
+      output-bindings: order-output
