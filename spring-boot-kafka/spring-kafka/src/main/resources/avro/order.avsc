@@ -1,0 +1,10 @@
+{
+     "type": "record",
+     "namespace": "com.sunilvb.demo",
+     "name": "Order",
+     "version": "1",
+     "fields": [
+       { "name": "id", "type": "int", "doc": "Id of the order filed" },
+       { "name": "amount", "type": "int", "doc": "Amount of the order" }
+     ]
+}

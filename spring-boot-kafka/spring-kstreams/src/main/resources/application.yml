@@ -7,8 +7,7 @@ app:
     store:
       bufferName: ${BUFFER_STORE_NAME:buffer-store} # Наименование хранилища данных
     topic:
-      input: ${INPUT_TOPIC:order-output} # Топик для входящих запросов
-      dead: ${DEAD_TOPIC:order} # Топик для синтаксических ошибок
+      input: ${INPUT_TOPIC:order-output-without-schema} # Топик для входящих запросов
 
 spring:
   application:
@@ -37,6 +36,7 @@ spring:
                 dir: ${KAFKA_STATE_STORE_DIR:${java.io.tmpdir:/tmp}/kafka-streams}
               topic.max.message.bytes: ${KAFKA_INTERNAL_TOPIC_MAX_MESSAGE_BYTES:1048576}
             consumer-properties:
+              key.converter: org.apache.kafka.connect.storage.StringConverter
               max.poll.interval.ms: ${KAFKA_MAX_POLL_INTERVAL:300000}
             producer-properties:
               max.request.size: ${KAFKA_MAX_REQUEST_SIZE:1048576}

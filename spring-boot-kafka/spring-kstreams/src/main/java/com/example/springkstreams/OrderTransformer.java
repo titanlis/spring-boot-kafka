@@ -18,10 +18,9 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PackageTransformer implements Transformer<String, byte[], KeyValue<String, byte[]>> {
-    private final ObjectMapper objectMapper;
+public class OrderTransformer implements Transformer<String, byte[], KeyValue<String, byte[]>> {
     private final StreamsConfig.StoreProps storeProps;
-
+    private final ObjectMapper objectMapper;
     private KeyValueStore<String, byte[]> bufferStore;
 
     @Override

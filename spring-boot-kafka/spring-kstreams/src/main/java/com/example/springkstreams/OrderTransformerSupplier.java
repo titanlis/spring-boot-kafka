@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class PackageTransformerSupplier implements TransformerSupplier<String, byte[], KeyValue<String, byte[]>> {
+public class OrderTransformerSupplier implements TransformerSupplier<String, byte[], KeyValue<String, byte[]>> {
 
     private final StreamsConfig.StoreProps storeProps;
     private final ObjectProvider<Transformer<String, byte[], KeyValue<String, byte[]>>> objectProvider;

@@ -1,4 +1,7 @@
 package com.example.springkafka;
 
-public record Order(Long id, Integer amount) {
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record Order(Integer id, Integer amount) {
 }

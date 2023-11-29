@@ -16,10 +16,10 @@ import java.util.function.Consumer;
 @EnableConfigurationProperties(StreamsConfig.StoreProps.class)
 public class StreamsConfig {
 
-    private static final String TRANSFORMER_NAME = "data_transformer";
+    private static final String TRANSFORMER_NAME = "order_transformer";
 
     @Bean
-    public Consumer<KStream<String, byte[]>> inputTopic(PackageTransformerSupplier transformerSupplier) {
+    public Consumer<KStream<String, byte[]>> inputTopic(OrderTransformerSupplier transformerSupplier) {
         return packageData -> packageData.transform(transformerSupplier, Named.as(TRANSFORMER_NAME));
     }
 

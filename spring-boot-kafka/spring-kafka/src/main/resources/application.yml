@@ -1,9 +1,37 @@
 # Server settings
 server:
-  port: ${SERVER_PORT:8089}
+  port: ${SERVER_PORT:8080}
+
+# Spring Cloud Stream settings
 spring:
-  kafka:
-    bootstrap-servers: ${KAFKA_BROKERS:localhost:29092}
   cloud:
+    function:
+      definition: process
     stream:
-      output-bindings: order-output
+      bindings:
+        process-in-0:
+          group: "spring-kafka"
+          destination: order-output
+        output:
+          destination: order-output-without-schema
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS:localhost:29092}
+        bindings:
+          process-in-0:
+            consumer:
+              configuration:
+                value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+                schema.registry.url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+                specific.avro.reader: true
+
+  # Spring Kafka settings
+  kafka:
+    properties:
+      schema:
+        registry:
+          url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:29092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
