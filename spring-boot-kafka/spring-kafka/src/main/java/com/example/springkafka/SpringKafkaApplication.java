@@ -37,22 +37,32 @@ public class SpringKafkaApplication {
      */
     @PostMapping("write")
     public ResponseEntity<String> writeOrder(@RequestBody Order order) {
-        log.info("Send: {}", order);
-        com.sunilvb.demo.Order ord = com.sunilvb.demo.Order.newBuilder()
-                .setId(order.id())
-                .setAmount(order.amount())
-                .build();
-        ProducerRecord<String, com.sunilvb.demo.Order> producerRecord = new ProducerRecord<>("order-output", ord);
+        Order ord = new Order(order.getId(), order.getAmount());
+        ProducerRecord<String, Order> producerRecord = new ProducerRecord<>("order-output", ord);
         // Запись в Kafka с учетом схемы avro
-        kafkaTemplate.send(producerRecord);
-        return ResponseEntity.ok("SUCCESS");
+//        kafkaTemplate.send(producerRecord);
+//        return ResponseEntity.ok("SUCCESS");
+
+        String body = "SUCCESS";
+        // Запись в Kafka с учетом схемы avro
+        try{
+            log.info("Send: {}", ord);
+            kafkaTemplate.send(producerRecord);
+            return ResponseEntity.ok(body);
+        }catch (Exception e){
+            e.printStackTrace();
+            body = e.getMessage();
+
+        }
+        return ResponseEntity.badRequest().body(body);
+
     }
 
     /**
      * Получение записей из топика order-output и дальнейшая их запись в топик order-output-without-schema
      */
     @Bean
-    public Consumer<com.sunilvb.demo.Order> process() {
+    public Consumer<Order> process() {
         return input -> {
             Order order = new Order(input.getId(), input.getAmount());
             log.info("Get: {}", order);
